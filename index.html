@@ -6,42 +6,30 @@
     <title>Preditor Blaze</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.15.0/dist/tf.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         .btn {
-            @apply py-3 rounded-lg text-center font-bold text-xl transition-all duration-200 shadow-md;
-        }
-        .btn-red {
-            @apply bg-red-600 text-white hover:bg-red-700 border border-red-800;
-        }
-        .btn-black {
-            @apply bg-black text-white hover:bg-gray-900 border border-gray-800;
-        }
-        .btn-white {
-            @apply bg-white text-black hover:bg-gray-100 border-2 border-gray-800;
-        }
-        .btn-train {
-            @apply bg-green-500 text-black hover:bg-green-600 py-4 font-bold border border-green-700;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 20px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         .dark {
-            @apply bg-gray-900 text-white;
+            background-color: #181818;
+            color: white;
         }
         .dark .btn-white {
-            @apply border-white;
+            border-color: white;
         }
         .pulse {
             animation: pulse 1.5s infinite;
         }
         @keyframes pulse {
-            0% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.5;
-            }
-            100% {
-                opacity: 1;
-            }
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
         }
     </style>
 </head>
@@ -57,32 +45,33 @@
         <div id="previsaoLabel" class="bg-white dark:bg-gray-700 rounded-lg p-4 mb-4 text-center text-xl font-bold shadow-md border border-gray-200 dark:border-gray-600">
             Último número sorteado: -
         </div>
+
         <!-- Number grid -->
         <div class="grid grid-cols-3 gap-2 mb-4">
             <!-- Red buttons (1-7) -->
-            <button class="btn btn-red" data-number="1" style="background-color: #dc2626; color: white;">1</button>
-            <button class="btn btn-red" data-number="2" style="background-color: #dc2626; color: white;">2</button>
-            <button class="btn btn-red" data-number="3" style="background-color: #dc2626; color: white;">3</button>
-            <button class="btn btn-red" data-number="4" style="background-color: #dc2626; color: white;">4</button>
-            <button class="btn btn-red" data-number="5" style="background-color: #dc2626; color: white;">5</button>
-            <button class="btn btn-red" data-number="6" style="background-color: #dc2626; color: white;">6</button>
-            <button class="btn btn-red" data-number="7" style="background-color: #dc2626; color: white;">7</button>
+            <button class="btn" data-number="1" style="background-color: #dc2626; color: white; border: 1px solid #991b1b;">1</button>
+            <button class="btn" data-number="2" style="background-color: #dc2626; color: white; border: 1px solid #991b1b;">2</button>
+            <button class="btn" data-number="3" style="background-color: #dc2626; color: white; border: 1px solid #991b1b;">3</button>
+            <button class="btn" data-number="4" style="background-color: #dc2626; color: white; border: 1px solid #991b1b;">4</button>
+            <button class="btn" data-number="5" style="background-color: #dc2626; color: white; border: 1px solid #991b1b;">5</button>
+            <button class="btn" data-number="6" style="background-color: #dc2626; color: white; border: 1px solid #991b1b;">6</button>
+            <button class="btn" data-number="7" style="background-color: #dc2626; color: white; border: 1px solid #991b1b;">7</button>
             
             <!-- Black buttons (8-14) -->
-            <button class="btn btn-black" data-number="8" style="background-color: #000000; color: white;">8</button>
-            <button class="btn btn-black" data-number="9" style="background-color: #000000; color: white;">9</button>
-            <button class="btn btn-black" data-number="10" style="background-color: #000000; color: white;">10</button>
-            <button class="btn btn-black" data-number="11" style="background-color: #000000; color: white;">11</button>
-            <button class="btn btn-black" data-number="12" style="background-color: #000000; color: white;">12</button>
-            <button class="btn btn-black" data-number="13" style="background-color: #000000; color: white;">13</button>
-            <button class="btn btn-black" data-number="14" style="background-color: #000000; color: white;">14</button>
+            <button class="btn" data-number="8" style="background-color: #000000; color: white; border: 1px solid #374151;">8</button>
+            <button class="btn" data-number="9" style="background-color: #000000; color: white; border: 1px solid #374151;">9</button>
+            <button class="btn" data-number="10" style="background-color: #000000; color: white; border: 1px solid #374151;">10</button>
+            <button class="btn" data-number="11" style="background-color: #000000; color: white; border: 1px solid #374151;">11</button>
+            <button class="btn" data-number="12" style="background-color: #000000; color: white; border: 1px solid #374151;">12</button>
+            <button class="btn" data-number="13" style="background-color: #000000; color: white; border: 1px solid #374151;">13</button>
+            <button class="btn" data-number="14" style="background-color: #000000; color: white; border: 1px solid #374151;">14</button>
             
             <!-- White button (15) -->
-            <button class="btn btn-white" data-number="15" style="background-color: #ffffff; color: black;">15</button>
+            <button class="btn" data-number="15" style="background-color: #ffffff; color: black; border: 2px solid #374151;">15</button>
         </div>
 
         <!-- Train button -->
-        <button id="trainButton" class="btn btn-train w-full mb-4" style="background-color: #22c55e; color: black;">Treinar</button>
+        <button id="trainButton" class="btn w-full mb-4" style="background-color: #22c55e; color: black; border: 1px solid #16a34a; padding: 16px; font-weight: bold;">Treinar</button>
 
         <!-- Counter for manual signals -->
         <div id="signalCounter" class="text-center">
@@ -115,7 +104,6 @@
                 document.body.classList.remove('dark');
             }
         });
-
         // App state
         const state = {
             treinado: false,
@@ -144,7 +132,6 @@
         const popupMessage = document.getElementById('popupMessage');
         const popupClose = document.getElementById('popupClose');
         const numberButtons = document.querySelectorAll('[data-number]');
-
         // Helper functions for conversion and one-hot encoding
         function seqNumToOneHot(num) {
             // Converts number to one-hot vector (1-7: red, 8-14: black, 15: white)
@@ -171,6 +158,7 @@
                 return "Desconhecido";
             }
         }
+
         function heuristicGuess(recentSignals) {
             // Simple heuristic based on frequency
             const n = recentSignals.length;
@@ -227,7 +215,6 @@
             
             return probs;
         }
-
         // UI Functions
         function showPopup(title, message) {
             popupTitle.textContent = title;
@@ -278,31 +265,7 @@
                 }
             });
         });
-
-        // Train button
-        trainButton.addEventListener('click', async () => {
-            try {
-                // Show progress popup
-                showPopup("Treinamento", "Carregando dados...");
-                
-                // Simulate API data fetch
-                await simulateFetchDataFromAPI();
-                
-                // Reset manual signals after training
-                state.manualSignals = [];
-                state.manualNumbers = [];
-                state.treinado = true;
-                
-                updateInfoLabel(0, 0, 0);
-                previsaoLabel.textContent = "Último número sorteado: -";
-                
-                showPopup("Treinamento", "Treinamento concluído com sucesso!!");
-                countText.textContent = "0 de 10 sinais registrados";
-            } catch (error) {
-                showPopup("Erro", error.message);
-            }
-        });
-// Substitua a função simulateFetchDataFromAPI por esta implementação real quando estiver pronto para integrar com a API:
+// Para integrar com a API real do Tipminer, substitua a função simulateFetchDataFromAPI por esta:
 async function fetchDataFromTipminerAPI() {
     try {
         popupMessage.textContent = "Carregando: 10%";
@@ -419,6 +382,30 @@ async function fetchDataFromTipminerAPI() {
         throw new Error(`Failed to fetch data: ${error.message}`);
     }
 }
+        // Train button - APÓS a definição da função simulateFetchDataFromAPI
+        trainButton.addEventListener('click', async () => {
+            try {
+                // Show progress popup
+                showPopup("Treinamento", "Carregando dados...");
+                
+                // Simulate API data fetch - agora esta função está definida acima
+                await simulateFetchDataFromAPI();
+                
+                // Reset manual signals after training
+                state.manualSignals = [];
+                state.manualNumbers = [];
+                state.treinado = true;
+                
+                updateInfoLabel(0, 0, 0);
+                previsaoLabel.textContent = "Último número sorteado: -";
+                
+                showPopup("Treinamento", "Treinamento concluído com sucesso!!");
+                countText.textContent = "0 de 10 sinais registrados";
+            } catch (error) {
+                showPopup("Erro", error.message);
+            }
+        });
+        // Prediction function
         async function makePrediction() {
             if (state.manualSignals.length < 10) {
                 showPopup("Erro", "Necessário 10 sinais para fazer previsão.");
@@ -483,7 +470,6 @@ async function fetchDataFromTipminerAPI() {
                 showPopup("Erro na previsão", error.message);
             }
         }
-
         // Initialize counter
         countText.textContent = "0 de 10 sinais registrados";
     </script>
