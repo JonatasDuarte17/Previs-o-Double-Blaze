@@ -302,111 +302,6 @@
                 showPopup("Erro", error.message);
             }
         });
-        // Simulated API and ML Functions
-        async function simulateFetchDataFromAPI() {
-            // This function would fetch data from tipminer API
-            // For the demo, we'll simulate some training data
-            
-            // Simulate delay and progress
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            popupMessage.textContent = "Carregando: 20%";
-            
-            // Simulate data processing
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            popupMessage.textContent = "Carregando: 40%";
-            
-            // Simulate model training
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            popupMessage.textContent = "Carregando: 60%";
-            
-            // Simulate TensorFlow.js model creation
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            popupMessage.textContent = "Carregando: 80%";
-            
-            // Create a simple TF.js model for demo
-            const model = await tf.sequential();
-            model.add(tf.layers.dense({units: 10, activation: 'relu', inputShape: [30]}));
-            model.add(tf.layers.dense({units: 3, activation: 'softmax'}));
-            model.compile({optimizer: 'adam', loss: 'categoricalCrossentropy'});
-            
-            // Store the model in state
-            state.models.lstm = model;
-            
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            popupMessage.textContent = "Carregando: 100%";
-            
-            return true;
-        }
-        async function makePrediction() {
-            if (state.manualSignals.length < 10) {
-                showPopup("Erro", "Necessário 10 sinais para fazer previsão.");
-                return;
-            }
-            
-            try {
-                // In a real implementation, we would use the trained ML models
-                // Here we'll use a simplified heuristic for the demo
-                
-                // Use heuristic for demo purposes
-                const probHeur = heuristicGuess(state.manualSignals);
-                
-                // In a real app, probRf, probEt, probMlp, probLstm would come from models
-                // Here we'll generate some reasonable values
-                const probRf = [0.35, 0.35, 0.3];
-                const probEt = [0.4, 0.3, 0.3];
-                const probMlp = [0.3, 0.45, 0.25];
-                const probLstm = [0.35, 0.4, 0.25];
-                
-                // Ensemble: simple average of five models
-                const finalProbs = probRf.map((val, i) => 
-                    (val + probEt[i] + probMlp[i] + probLstm[i] + probHeur[i]) / 5.0
-                );
-                
-                // Adjust based on manual numbers
-                const adjustedProbs = adjustProbsByManualNumbers(finalProbs, state.manualNumbers);
-                
-                // Calculate color distribution in the window
-                const colorCounts = [0, 0, 0];
-                state.manualSignals.forEach(signal => {
-                    const idx = signal.indexOf(1);
-                    if (idx >= 0 && idx < 3) {
-                        colorCounts[idx]++;
-                    }
-                });
-                
-                const empDistribution = colorCounts.map(c => c / 10.0);
-                const balanceFactors = empDistribution.map(d => d > 0 ? (1/3) / d : 1);
-                
-                // Clip balance factors
-                const clippedFactors = balanceFactors.map(f => Math.min(Math.max(f, 0.9), 1.1));
-                
-                // Apply balance factors
-                let finalProbsBalanced = adjustedProbs.map((p, i) => p * clippedFactors[i]);
-                
-                // Normalize
-                const sum = finalProbsBalanced.reduce((a, b) => a + b, 0);
-                finalProbsBalanced = finalProbsBalanced.map(p => p / sum);
-                
-                // Update UI
-                updateInfoLabel(finalProbsBalanced[0], finalProbsBalanced[1], finalProbsBalanced[2]);
-                
-                // Get final prediction
-                const idxFinal = finalProbsBalanced.indexOf(Math.max(...finalProbsBalanced));
-                const oneHotFinal = [0, 0, 0];
-                oneHotFinal[idxFinal] = 1;
-                const palpiteFinal = oneHotToStr(oneHotFinal);
-                
-                showPopup("Palpite Final", `Previsão: ${palpiteFinal}`);
-            } catch (error) {
-                showPopup("Erro na previsão", error.message);
-            }
-        }
-
-        // Initialize counter
-        countText.textContent = "0 de 10 sinais registrados";
-    </script>
-</body>
-</html>
 // Substitua a função simulateFetchDataFromAPI por esta implementação real quando estiver pronto para integrar com a API:
 async function fetchDataFromTipminerAPI() {
     try {
@@ -524,3 +419,73 @@ async function fetchDataFromTipminerAPI() {
         throw new Error(`Failed to fetch data: ${error.message}`);
     }
 }
+        async function makePrediction() {
+            if (state.manualSignals.length < 10) {
+                showPopup("Erro", "Necessário 10 sinais para fazer previsão.");
+                return;
+            }
+            
+            try {
+                // In a real implementation, we would use the trained ML models
+                // Here we'll use a simplified heuristic for the demo
+                
+                // Use heuristic for demo purposes
+                const probHeur = heuristicGuess(state.manualSignals);
+                
+                // In a real app, probRf, probEt, probMlp, probLstm would come from models
+                // Here we'll generate some reasonable values
+                const probRf = [0.35, 0.35, 0.3];
+                const probEt = [0.4, 0.3, 0.3];
+                const probMlp = [0.3, 0.45, 0.25];
+                const probLstm = [0.35, 0.4, 0.25];
+                
+                // Ensemble: simple average of five models
+                const finalProbs = probRf.map((val, i) => 
+                    (val + probEt[i] + probMlp[i] + probLstm[i] + probHeur[i]) / 5.0
+                );
+                
+                // Adjust based on manual numbers
+                const adjustedProbs = adjustProbsByManualNumbers(finalProbs, state.manualNumbers);
+                
+                // Calculate color distribution in the window
+                const colorCounts = [0, 0, 0];
+                state.manualSignals.forEach(signal => {
+                    const idx = signal.indexOf(1);
+                    if (idx >= 0 && idx < 3) {
+                        colorCounts[idx]++;
+                    }
+                });
+                
+                const empDistribution = colorCounts.map(c => c / 10.0);
+                const balanceFactors = empDistribution.map(d => d > 0 ? (1/3) / d : 1);
+                
+                // Clip balance factors
+                const clippedFactors = balanceFactors.map(f => Math.min(Math.max(f, 0.9), 1.1));
+                
+                // Apply balance factors
+                let finalProbsBalanced = adjustedProbs.map((p, i) => p * clippedFactors[i]);
+                
+                // Normalize
+                const sum = finalProbsBalanced.reduce((a, b) => a + b, 0);
+                finalProbsBalanced = finalProbsBalanced.map(p => p / sum);
+                
+                // Update UI
+                updateInfoLabel(finalProbsBalanced[0], finalProbsBalanced[1], finalProbsBalanced[2]);
+                
+                // Get final prediction
+                const idxFinal = finalProbsBalanced.indexOf(Math.max(...finalProbsBalanced));
+                const oneHotFinal = [0, 0, 0];
+                oneHotFinal[idxFinal] = 1;
+                const palpiteFinal = oneHotToStr(oneHotFinal);
+                
+                showPopup("Palpite Final", `Previsão: ${palpiteFinal}`);
+            } catch (error) {
+                showPopup("Erro na previsão", error.message);
+            }
+        }
+
+        // Initialize counter
+        countText.textContent = "0 de 10 sinais registrados";
+    </script>
+</body>
+</html>
